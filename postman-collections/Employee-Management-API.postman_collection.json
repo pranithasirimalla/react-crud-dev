@@ -1,0 +1,530 @@
+{
+	"info": {
+		"_postman_id": "employee-management-api",
+		"name": "Employee Management API",
+		"description": "Comprehensive REST API for Employee Management System with CRUD operations, search functionality, and hierarchical relationships. Built with Spring Boot 3.2.0 and Java 21, featuring PostgreSQL database integration.",
+		"version": "1.0.0",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "noauth"
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"exec": [
+					"// Set base URL and common headers",
+					"pm.globals.set('baseUrl', 'http://localhost:8081/api');",
+					"pm.globals.set('apiVersion', 'v1');",
+					""
+				],
+				"type": "text/javascript"
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8081/api",
+			"type": "string"
+		},
+		{
+			"key": "apiVersion",
+			"value": "v1",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Health & System",
+			"description": "System health and status endpoints",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/{{apiVersion}}/employees/health",
+							"host": ["{{baseUrl}}"],
+							"path": ["{{apiVersion}}", "employees", "health"]
+						},
+						"description": "Simple endpoint to verify that the Employee API service is running and healthy"
+					},
+					"response": []
+				},
+				{
+					"name": "API Documentation (Swagger UI)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/swagger-ui.html",
+							"host": ["{{baseUrl}}"],
+							"path": ["swagger-ui.html"]
+						},
+						"description": "Access the Swagger UI for interactive API documentation"
+					},
+					"response": []
+				},
+				{
+					"name": "OpenAPI Specification",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v3/api-docs",
+							"host": ["{{baseUrl}}"],
+							"path": ["v3", "api-docs"]
+						},
+						"description": "Get the raw OpenAPI 3.0 specification in JSON format"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Employee CRUD Operations",
+			"description": "Core Create, Read, Update, Delete operations for employees",
+			"item": [
+				{
+					"name": "Get All Employees",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/{{apiVersion}}/employees",
+							"host": ["{{baseUrl}}"],
+							"path": ["{{apiVersion}}", "employees"]
+						},
+						"description": "Retrieves a list of all active employees in the system"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Employee by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/{{apiVersion}}/employees/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["{{apiVersion}}", "employees", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Employee ID"
+								}
+							]
+						},
+						"description": "Retrieves a specific employee by their unique identifier"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Employee",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john.doe@company.com\",\n  \"phone\": \"+1-555-0101\",\n  \"department\": \"Engineering\",\n  \"position\": \"Senior Software Engineer\",\n  \"salary\": 95000.00,\n  \"hireDate\": \"2024-01-15\",\n  \"managerId\": 2,\n  \"isActive\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/{{apiVersion}}/employees",
+							"host": ["{{baseUrl}}"],
+							"path": ["{{apiVersion}}", "employees"]
+						},
+						"description": "Creates a new employee record with the provided information"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Employee",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Smith\",\n  \"email\": \"john.smith@company.com\",\n  \"phone\": \"+1-555-0102\",\n  \"department\": \"Engineering\",\n  \"position\": \"Lead Software Engineer\",\n  \"salary\": 105000.00,\n  \"hireDate\": \"2024-01-15\",\n  \"managerId\": 2,\n  \"isActive\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/{{apiVersion}}/employees/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["{{apiVersion}}", "employees", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Employee ID to update"
+								}
+							]
+						},
+						"description": "Updates an existing employee record with the provided information"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Employee (Soft Delete)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/{{apiVersion}}/employees/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["{{apiVersion}}", "employees", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Employee ID to delete"
+								}
+							]
+						},
+						"description": "Soft deletes an employee (marks as inactive) rather than permanently removing the record"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Employee Search & Filtering",
+			"description": "Advanced search, filtering, and pagination capabilities",
+			"item": [
+				{
+					"name": "Get Employees with Pagination",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/{{apiVersion}}/employees/paginated?page=0&size=10&sortBy=firstName&sortDirection=asc",
+							"host": ["{{baseUrl}}"],
+							"path": ["{{apiVersion}}", "employees", "paginated"],
+							"query": [
+								{
+									"key": "page",
+									"value": "0",
+									"description": "Page number (0-based)"
+								},
+								{
+									"key": "size",
+									"value": "10",
+									"description": "Number of items per page"
+								},
+								{
+									"key": "sortBy",
+									"value": "firstName",
+									"description": "Field to sort by"
+								},
+								{
+									"key": "sortDirection",
+									"value": "asc",
+									"description": "Sort direction (asc/desc)"
+								}
+							]
+						},
+						"description": "Retrieves employees with pagination, sorting, and filtering capabilities"
+					},
+					"response": []
+				},
+				{
+					"name": "Search Employees",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"searchTerm\": \"john\",\n  \"department\": \"Engineering\",\n  \"position\": null,\n  \"page\": 0,\n  \"size\": 10,\n  \"sortBy\": \"firstName\",\n  \"sortDirection\": \"asc\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/{{apiVersion}}/employees/search",
+							"host": ["{{baseUrl}}"],
+							"path": ["{{apiVersion}}", "employees", "search"]
+						},
+						"description": "Advanced search for employees with multiple criteria including name, department, and position"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Employees by Department",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/{{apiVersion}}/employees/department/:department",
+							"host": ["{{baseUrl}}"],
+							"path": ["{{apiVersion}}", "employees", "department", ":department"],
+							"variable": [
+								{
+									"key": "department",
+									"value": "Engineering",
+									"description": "Department name"
+								}
+							]
+						},
+						"description": "Retrieves all employees from a specific department"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Employees by Position",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/{{apiVersion}}/employees/position/:position",
+							"host": ["{{baseUrl}}"],
+							"path": ["{{apiVersion}}", "employees", "position", ":position"],
+							"variable": [
+								{
+									"key": "position",
+									"value": "Software Engineer",
+									"description": "Position title"
+								}
+							]
+						},
+						"description": "Retrieves all employees with a specific job position"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Employees by Manager",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/{{apiVersion}}/employees/manager/:managerId",
+							"host": ["{{baseUrl}}"],
+							"path": ["{{apiVersion}}", "employees", "manager", ":managerId"],
+							"variable": [
+								{
+									"key": "managerId",
+									"value": "2",
+									"description": "Manager's Employee ID"
+								}
+							]
+						},
+						"description": "Retrieves all employees who report to a specific manager"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Department & Position Operations",
+			"description": "Operations for managing departments and positions",
+			"item": [
+				{
+					"name": "Get All Departments",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/{{apiVersion}}/employees/departments",
+							"host": ["{{baseUrl}}"],
+							"path": ["{{apiVersion}}", "employees", "departments"]
+						},
+						"description": "Retrieves a list of all unique departments in the system"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Positions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/{{apiVersion}}/employees/positions",
+							"host": ["{{baseUrl}}"],
+							"path": ["{{apiVersion}}", "employees", "positions"]
+						},
+						"description": "Retrieves a list of all unique job positions in the system"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Test Data & Validation",
+			"description": "Endpoints for testing validation and error handling",
+			"item": [
+				{
+					"name": "Create Employee - Validation Error Test",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"\",\n  \"lastName\": null,\n  \"email\": \"invalid-email\",\n  \"phone\": \"123456789012345678901\",\n  \"department\": \"\",\n  \"position\": null,\n  \"salary\": -1000,\n  \"hireDate\": \"2024-01-15\",\n  \"managerId\": null,\n  \"isActive\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/{{apiVersion}}/employees",
+							"host": ["{{baseUrl}}"],
+							"path": ["{{apiVersion}}", "employees"]
+						},
+						"description": "Test validation errors with invalid employee data (empty fields, invalid email, negative salary)"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Employee - Duplicate Email Test",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john.smith@company.com\",\n  \"phone\": \"+1-555-0103\",\n  \"department\": \"Marketing\",\n  \"position\": \"Marketing Specialist\",\n  \"salary\": 60000.00,\n  \"hireDate\": \"2024-02-01\",\n  \"managerId\": 4,\n  \"isActive\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/{{apiVersion}}/employees",
+							"host": ["{{baseUrl}}"],
+							"path": ["{{apiVersion}}", "employees"]
+						},
+						"description": "Test duplicate email validation (should return 409 Conflict)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Non-existent Employee",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/{{apiVersion}}/employees/999",
+							"host": ["{{baseUrl}}"],
+							"path": ["{{apiVersion}}", "employees", "999"]
+						},
+						"description": "Test 404 error handling by requesting a non-existent employee ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Access Deleted Employee",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/{{apiVersion}}/employees/3",
+							"host": ["{{baseUrl}}"],
+							"path": ["{{apiVersion}}", "employees", "3"]
+						},
+						"description": "Test accessing a soft-deleted employee (should return appropriate error)"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

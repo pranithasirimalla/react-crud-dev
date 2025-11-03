@@ -1,0 +1,156 @@
+{
+  "info": {
+    "name": "Employee Management API",
+    "description": "Complete REST API collection for Employee Management System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080/api/v1/employees",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/health",
+          "host": ["{{base_url}}"],
+          "path": ["health"]
+        }
+      }
+    },
+    {
+      "name": "Get All Employees",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}",
+          "host": ["{{base_url}}"]
+        }
+      }
+    },
+    {
+      "name": "Get Employees Paginated",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/paginated?page=0&size=10&sortBy=firstName&sortDirection=asc",
+          "host": ["{{base_url}}"],
+          "path": ["paginated"],
+          "query": [
+            {"key": "page", "value": "0"},
+            {"key": "size", "value": "10"},
+            {"key": "sortBy", "value": "firstName"},
+            {"key": "sortDirection", "value": "asc"}
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Employee by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/1",
+          "host": ["{{base_url}}"],
+          "path": ["1"]
+        }
+      }
+    },
+    {
+      "name": "Create Employee",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john.doe@company.com\",\n  \"phone\": \"+1-555-0101\",\n  \"department\": \"Engineering\",\n  \"position\": \"Software Engineer\",\n  \"salary\": 75000.00,\n  \"hireDate\": \"2024-01-15\",\n  \"managerId\": null,\n  \"isActive\": true\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}",
+          "host": ["{{base_url}}"]
+        }
+      }
+    },
+    {
+      "name": "Update Employee",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john.doe.updated@company.com\",\n  \"phone\": \"+1-555-0999\",\n  \"department\": \"Engineering\",\n  \"position\": \"Senior Software Engineer\",\n  \"salary\": 95000.00,\n  \"hireDate\": \"2024-01-15\",\n  \"managerId\": null,\n  \"isActive\": true\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/1",
+          "host": ["{{base_url}}"],
+          "path": ["1"]
+        }
+      }
+    },
+    {
+      "name": "Delete Employee",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/1",
+          "host": ["{{base_url}}"],
+          "path": ["1"]
+        }
+      }
+    },
+    {
+      "name": "Get Employees by Department",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/department/Engineering",
+          "host": ["{{base_url}}"],
+          "path": ["department", "Engineering"]
+        }
+      }
+    },
+    {
+      "name": "Search Employees",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"department\": \"Engineering\",\n  \"minSalary\": 70000,\n  \"maxSalary\": 150000,\n  \"isActive\": true,\n  \"page\": 0,\n  \"size\": 10,\n  \"sortBy\": \"salary\",\n  \"sortDirection\": \"desc\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/search",
+          "host": ["{{base_url}}"],
+          "path": ["search"]
+        }
+      }
+    }
+  ]
+}

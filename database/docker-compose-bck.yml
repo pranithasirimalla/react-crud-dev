@@ -1,0 +1,45 @@
+services:
+  postgresdb:
+    image: postgres:15-alpine
+    container_name: employee_postgres
+    environment:
+      POSTGRES_DB: employee_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    volumes:
+      - ./data:/var/lib/postgresql/data
+      - ./schema/employee.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./seed-data/employee-data.sql:/docker-entrypoint-initdb.d/02-seed-data.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d employee_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgresui:
+    image: dpage/pgadmin4:latest
+    container_name: employee_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    ports:
+      - "8080:80"
+    networks:
+      - postgres-network
+    depends_on:
+      postgresdb:
+        condition: service_healthy
+
+networks:
+  postgres-network:
+    driver: bridge
+
+volumes:
+  pgadmin-data:

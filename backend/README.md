@@ -1,25 +1,26 @@
-# Backend - Node.js/Express API
+# Backend - Java 17/Spring Boot
 
-This directory will contain the Express.js backend API for the employee management system.
+This directory will contain the Spring Boot backend API for the employee management system.
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js (v16 or higher)
-- npm or yarn
+- Java 17 (JDK)
+- Maven 3.6+ or Gradle 7.0+
 - PostgreSQL database (use Docker setup from ../database)
+- IDE (IntelliJ IDEA, Eclipse, or VS Code with Java extensions)
 
 ### Installation
 ```bash
-# Initialize npm project
-npm init -y
+# Create Spring Boot project using Spring Initializr or Maven
+mvn archetype:generate -DgroupId=com.employee.management \
+  -DartifactId=employee-backend \
+  -DarchetypeArtifactId=maven-archetype-quickstart \
+  -DinteractiveMode=false
 
-# Install dependencies
-npm install express cors dotenv pg
-npm install -D nodemon
-
-# Install additional utilities
-npm install helmet morgan express-rate-limit
+# Or initialize with Spring Boot CLI
+spring init --dependencies=web,data-jpa,postgresql,validation,security \
+  --java-version=17 --type=maven-project employee-backend
 ```
 
 ## 📋 Planned Features
@@ -27,147 +28,252 @@ npm install helmet morgan express-rate-limit
 ### API Endpoints
 ```
 GET    /api/employees          # Get all employees
-GET    /api/employees/:id      # Get employee by ID
+GET    /api/employees/{id}     # Get employee by ID
 POST   /api/employees          # Create new employee
-PUT    /api/employees/:id      # Update employee
-DELETE /api/employees/:id      # Delete employee (soft delete)
+PUT    /api/employees/{id}     # Update employee
+DELETE /api/employees/{id}     # Delete employee (soft delete)
 GET    /api/employees/search   # Search employees
 GET    /api/departments        # Get all departments
 ```
 
-### Middleware
-- **CORS** - Cross-origin resource sharing
-- **Helmet** - Security headers
-- **Morgan** - Request logging
-- **Rate Limiting** - API rate limiting
-- **Error Handling** - Centralized error handling
-- **Validation** - Input validation and sanitization
+### Spring Boot Features
+- **Spring Web** - RESTful web services
+- **Spring Data JPA** - Database operations
+- **Spring Security** - Authentication and authorization
+- **Spring Validation** - Input validation
+- **CORS Configuration** - Cross-origin resource sharing
+- **Exception Handling** - Global exception handling with @ControllerAdvice
+- **Actuator** - Health checks and monitoring
 
 ## 🗄️ Database Integration
 
 ### Connection Configuration
-```javascript
-// config/database.js
-const { Pool } = require('pg');
+```yaml
+# application.yml
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/employee_db
+    username: admin
+    password: admin123
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
 
-const pool = new Pool({
-  host: process.env.DB_HOST || 'localhost',
-  port: process.env.DB_PORT || 5432,
-  database: process.env.DB_NAME || 'employee_db',
-  user: process.env.DB_USER || 'admin',
-  password: process.env.DB_PASSWORD || 'admin123',
-});
+server:
+  port: 8080
 ```
 
-### Environment Variables
-Create `.env` file:
-```
-PORT=3001
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=employee_db
-DB_USER=admin
-DB_PASSWORD=admin123
-NODE_ENV=development
+### Maven Dependencies (pom.xml)
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <scope>runtime</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-validation</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+</dependencies>
 ```
 
 ## 📂 Planned Structure
 
 ```
 src/
-├── config/
-│   ├── database.js
-│   └── config.js
-├── controllers/
-│   └── employeeController.js
-├── middleware/
-│   ├── errorHandler.js
-│   ├── validation.js
-│   └── auth.js
-├── models/
-│   └── Employee.js
-├── routes/
-│   └── employees.js
-├── utils/
-│   ├── logger.js
-│   └── helpers.js
-├── tests/
-│   └── employees.test.js
-├── app.js
-└── server.js
+└── main/
+    ├── java/
+    │   └── com/employee/management/
+    │       ├── EmployeeManagementApplication.java
+    │       ├── config/
+    │       │   ├── SecurityConfig.java
+    │       │   └── CorsConfig.java
+    │       ├── controller/
+    │       │   └── EmployeeController.java
+    │       ├── service/
+    │       │   ├── EmployeeService.java
+    │       │   └── EmployeeServiceImpl.java
+    │       ├── repository/
+    │       │   └── EmployeeRepository.java
+    │       ├── entity/
+    │       │   ├── Employee.java
+    │       │   └── Department.java
+    │       ├── dto/
+    │       │   ├── EmployeeDto.java
+    │       │   └── EmployeeRequest.java
+    │       └── exception/
+    │           ├── GlobalExceptionHandler.java
+    │           └── ResourceNotFoundException.java
+    └── resources/
+        ├── application.yml
+        └── data.sql
+└── test/
+    └── java/
+        └── com/employee/management/
+            └── EmployeeControllerTest.java
 ```
 
 ## 🔒 Security Features
 
-- Input validation and sanitization
-- SQL injection prevention
-- XSS protection
-- Rate limiting
-- CORS configuration
-- Security headers (Helmet)
-- Error handling without exposing internals
+- **Spring Security** - Authentication and authorization
+- **Input Validation** - Bean validation with annotations
+- **SQL Injection Prevention** - JPA/Hibernate parameterized queries
+- **CORS Configuration** - Cross-origin request handling
+- **Exception Handling** - Global exception handling
+- **Security Headers** - Automatic security headers
+- **Method Security** - @PreAuthorize and @Secured annotations
 
 ## 📊 Sample Controller
 
-```javascript
-// controllers/employeeController.js
-const getAllEmployees = async (req, res) => {
-  try {
-    const query = `
-      SELECT id, first_name, last_name, email, department, position, salary
-      FROM employees 
-      WHERE is_active = true 
-      ORDER BY last_name, first_name
-    `;
-    const result = await pool.query(query);
-    res.json({
-      success: true,
-      data: result.rows,
-      count: result.rows.length
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Error fetching employees',
-      error: error.message
-    });
-  }
-};
+```java
+// controller/EmployeeController.java
+@RestController
+@RequestMapping("/api/employees")
+@CrossOrigin(origins = "http://localhost:3000")
+public class EmployeeController {
+
+    @Autowired
+    private EmployeeService employeeService;
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<EmployeeDto>>> getAllEmployees() {
+        try {
+            List<EmployeeDto> employees = employeeService.getAllEmployees();
+            ApiResponse<List<EmployeeDto>> response = new ApiResponse<>(
+                true, 
+                employees, 
+                "Employees retrieved successfully",
+                employees.size()
+            );
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            ApiResponse<List<EmployeeDto>> response = new ApiResponse<>(
+                false, 
+                null, 
+                "Error fetching employees: " + e.getMessage(),
+                0
+            );
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<EmployeeDto>> getEmployeeById(@PathVariable Long id) {
+        EmployeeDto employee = employeeService.getEmployeeById(id);
+        ApiResponse<EmployeeDto> response = new ApiResponse<>(
+            true, 
+            employee, 
+            "Employee retrieved successfully",
+            1
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping
+    public ResponseEntity<ApiResponse<EmployeeDto>> createEmployee(@Valid @RequestBody EmployeeRequest request) {
+        EmployeeDto employee = employeeService.createEmployee(request);
+        ApiResponse<EmployeeDto> response = new ApiResponse<>(
+            true, 
+            employee, 
+            "Employee created successfully",
+            1
+        );
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+}
 ```
 
 ## 🧪 Testing
 
-### Test Setup
-```bash
-npm install -D jest supertest
+### Test Dependencies
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-test</artifactId>
+    <scope>test</scope>
+</dependency>
+<dependency>
+    <groupId>com.h2database</groupId>
+    <artifactId>h2</artifactId>
+    <scope>test</scope>
+</dependency>
 ```
 
 ### Sample Test
-```javascript
-// tests/employees.test.js
-const request = require('supertest');
-const app = require('../app');
+```java
+// test/java/com/employee/management/EmployeeControllerTest.java
+@SpringBootTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
+@TestPropertySource(locations = "classpath:application-test.properties")
+class EmployeeControllerTest {
 
-describe('Employee API', () => {
-  test('GET /api/employees should return all employees', async () => {
-    const response = await request(app).get('/api/employees');
-    expect(response.status).toBe(200);
-    expect(response.body.success).toBe(true);
-  });
-});
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Test
+    void getAllEmployees_ShouldReturnEmployeeList() throws Exception {
+        mockMvc.perform(get("/api/employees"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.data").isArray());
+    }
+
+    @Test
+    void createEmployee_WithValidData_ShouldReturnCreatedEmployee() throws Exception {
+        String employeeJson = "{"
+                + "\"firstName\":\"John\","
+                + "\"lastName\":\"Doe\","
+                + "\"email\":\"john.doe@example.com\","
+                + "\"department\":\"IT\","
+                + "\"position\":\"Developer\""
+                + "}";
+
+        mockMvc.perform(post("/api/employees")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(employeeJson))
+                .andExpect(status().isCreated())
+                .andExpected(jsonPath("$.success").value(true));
+    }
+}
 ```
 
-## 📋 Package.json Scripts
+## 📋 Maven Commands
 
-```json
-{
-  "scripts": {
-    "start": "node src/server.js",
-    "dev": "nodemon src/server.js",
-    "test": "jest",
-    "test:watch": "jest --watch"
-  }
-}
+```bash
+# Build the project
+mvn clean compile
+
+# Run tests
+mvn test
+
+# Run the application
+mvn spring-boot:run
+
+# Package as JAR
+mvn clean package
+
+# Run with specific profile
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 
 ## 🔄 API Response Format
@@ -187,10 +293,58 @@ describe('Employee API', () => {
 {
   "success": false,
   "message": "Error description",
-  "error": "Detailed error information"
+  "error": "Detailed error information",
+  "timestamp": "2024-11-02T10:30:00Z"
+}
+```
+
+## 🏗️ Entity Example
+
+```java
+// entity/Employee.java
+@Entity
+@Table(name = "employees")
+public class Employee {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "first_name", nullable = false)
+    @NotBlank(message = "First name is required")
+    private String firstName;
+
+    @Column(name = "last_name", nullable = false)
+    @NotBlank(message = "Last name is required")
+    private String lastName;
+
+    @Column(unique = true, nullable = false)
+    @Email(message = "Email should be valid")
+    private String email;
+
+    @Column(nullable = false)
+    private String department;
+
+    @Column(nullable = false)
+    private String position;
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal salary;
+
+    @Column(name = "is_active")
+    private Boolean isActive = true;
+
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    // Constructors, getters, and setters
 }
 ```
 
 ---
 
-*This backend will provide a robust, secure API for the employee management system.*
+*This Spring Boot backend will provide a robust, secure, and scalable API for the employee management system using modern Java practices and Spring ecosystem.*
